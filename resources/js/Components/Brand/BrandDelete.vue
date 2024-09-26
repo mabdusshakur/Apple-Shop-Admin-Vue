@@ -33,7 +33,9 @@ async function itemDelete() {
             successToast("Request completed");
             await getListEvent();
             closeDeleteModal();
+            hideLoader();
         } else {
+            hideLoader();
             errorToast("Request fail!");
         }
     } catch {
