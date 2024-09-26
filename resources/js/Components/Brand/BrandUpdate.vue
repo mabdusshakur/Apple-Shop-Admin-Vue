@@ -69,7 +69,6 @@ async function update() {
             await getListEvent();
             closeUpdateModal();
             document.getElementById("update-form").reset();
-            await getList();
         } else {
             errorToast(res.data['message'])
         }
