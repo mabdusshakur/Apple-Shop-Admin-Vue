@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import SideNav from '../Components/SideNav.vue';
 import TopNav from '../Components/TopNav.vue';
+import CategoryList from '../Components/Category/CategoryList.vue';
 
 
 onMounted(() => {
@@ -12,9 +13,7 @@ onMounted(() => {
 <template>
     <TopNav />
     <SideNav />
-    <div>
-        <h1>Category Page</h1>
-    </div>
+    <CategoryList />
 </template>
 
 <style scoped></style>
