@@ -3,11 +3,14 @@ import { ref, onMounted } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bs5';
 import BrandCreate from './BrandCreate.vue';
+import BrandDelete from './BrandDelete.vue';
 
 
 DataTable.use(DataTablesCore);
 const brands = ref([]);
 const showCreateModal = ref(false);
+const showDeleteModal = ref(false);
+const selectedBrandId = ref(null);
 
 const columns = ref([
     {
@@ -33,7 +36,8 @@ function editBrand(id) {
 }
 
 function deleteBrand(id) {
-    console.log("delete " + id);
+    openDeleteModal();
+    selectedBrandId.value = id;
 }
 
 async function getList() {
@@ -41,12 +45,22 @@ async function getList() {
     brands.value = res.data[0];
 }
 
+// Create Modal
 function openCreateModal() {
     showCreateModal.value = true;
 }
 
 function closeCreateModal() {
     showCreateModal.value = false;
+}
+
+// Delete Modal
+function openDeleteModal() {
+    showDeleteModal.value = true;
+}
+
+function closeDeleteModal() {
+    showDeleteModal.value = false;
 }
 
 onMounted(async () => {
@@ -99,6 +113,8 @@ onMounted(async () => {
         </div>
     </div>
     <BrandCreate :showCreateModal="showCreateModal" @closeCreateModal="closeCreateModal" @getList="getList" />
+    <BrandDelete :showDeleteModal="showDeleteModal" :selectedBrandId="selectedBrandId"
+        @closeDeleteModal="closeDeleteModal" @getList="getList" />
 </template>
 
 <style scoped></style>
