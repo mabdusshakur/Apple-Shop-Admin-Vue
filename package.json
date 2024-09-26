@@ -13,10 +13,13 @@
     },
     "dependencies": {
         "@inertiajs/vue3": "^1.2.0",
+        "bootstrap": "^5.3.3",
         "datatables.net-bs5": "^2.1.7",
+        "datatables.net-dt": "^2.1.7",
         "datatables.net-select-bs5": "^2.1.0",
         "datatables.net-vue3": "^3.0.2",
         "vue-datatables-net": "^2.0.1",
+        "vue-good-table": "^2.21.11",
         "vue-router": "^4.0.13"
     }
 }
