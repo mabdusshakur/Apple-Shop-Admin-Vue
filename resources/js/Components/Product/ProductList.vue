@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bs5';
+import ProductCreate from './ProductCreate.vue';
 
 
 DataTable.use(DataTablesCore);
@@ -146,6 +147,7 @@ onMounted(async () => {
             </div>
         </div>
     </div>
+    <ProductCreate :showCreateModal="showCreateModal" @closeCreateModal="closeCreateModal" @getList="getList" />
 </template>
 
 <style scoped></style>
