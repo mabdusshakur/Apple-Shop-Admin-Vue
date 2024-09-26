@@ -4,12 +4,14 @@ import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bs5';
 import BrandCreate from './BrandCreate.vue';
 import BrandDelete from './BrandDelete.vue';
+import BrandUpdate from './BrandUpdate.vue';
 
 
 DataTable.use(DataTablesCore);
 const brands = ref([]);
 const showCreateModal = ref(false);
 const showDeleteModal = ref(false);
+const showUpdateModal = ref(false);
 const selectedBrandId = ref(null);
 
 const columns = ref([
@@ -32,7 +34,8 @@ const columns = ref([
 ]);
 
 function editBrand(id) {
-    console.log("edit " + id);
+    openUpdateModal();
+    selectedBrandId.value = id;
 }
 
 function deleteBrand(id) {
@@ -61,6 +64,15 @@ function openDeleteModal() {
 
 function closeDeleteModal() {
     showDeleteModal.value = false;
+}
+
+// Update Modal
+function openUpdateModal() {
+    showUpdateModal.value = true;
+}
+
+function closeUpdateModal() {
+    showUpdateModal.value = false;
 }
 
 onMounted(async () => {
@@ -115,6 +127,9 @@ onMounted(async () => {
     <BrandCreate :showCreateModal="showCreateModal" @closeCreateModal="closeCreateModal" @getList="getList" />
     <BrandDelete :showDeleteModal="showDeleteModal" :selectedBrandId="selectedBrandId"
         @closeDeleteModal="closeDeleteModal" @getList="getList" />
+
+    <BrandUpdate :showUpdateModal="showUpdateModal" :selectedBrandId="selectedBrandId"
+        @closeUpdateModal="closeUpdateModal" @getList="getList" />
 </template>
 
 <style scoped></style>
