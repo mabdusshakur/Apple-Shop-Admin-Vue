@@ -1,14 +1,16 @@
 <script setup>
+import { router } from '@inertiajs/vue3';
 
+function logout() {
+    axios.post("/api/auth/logout");
+    router.visit('/login')
+}
 </script>
 <template>
     <nav class="navbar fixed-top bg-white px-0 shadow-sm">
         <div class="container-fluid">
 
             <Link class="navbar-brand" href="#">
-            <span class="icon-nav h5 m-0" onclick="MenuBarClickHandler()">
-                <img class="nav-logo-sm mx-2" src="/public/admin/images/menu.svg" alt="logo" />
-            </span>
             <img class="nav-logo mx-2" src="/public/admin/images/logo.png" alt="logo" />
             </Link>
 
@@ -24,7 +26,7 @@
                         <Link class="side-bar-item" href="/profile">
                         <span class="side-bar-item-caption">Profile</span>
                         </Link>
-                        <Link class="side-bar-item" onclick="logout()">
+                        <Link class="side-bar-item" v-on:click="logout">
                         <span class="side-bar-item-caption">Logout</span>
                         </Link>
                     </div>
