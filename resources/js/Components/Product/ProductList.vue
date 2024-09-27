@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue';
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net-bs5';
 import ProductCreate from './ProductCreate.vue';
+import ProductUpdate from './ProductUpdate.vue';
+import ProductDelete from './ProductDelete.vue';
 
 
 DataTable.use(DataTablesCore);
@@ -148,6 +150,11 @@ onMounted(async () => {
         </div>
     </div>
     <ProductCreate :showCreateModal="showCreateModal" @closeCreateModal="closeCreateModal" @getList="getList" />
+    <ProductUpdate :showUpdateModal="showUpdateModal" @closeUpdateModal="closeUpdateModal" @getList="getList"
+        :selectedProductId="selectedProductId" :selectedProductDetailId="selectedProductDetailId" />
+
+    <ProductDelete :showDeleteModal="showDeleteModal" @closeDeleteModal="closeDeleteModal" @getList="getList"
+        :selectedProductId="selectedProductId" :selectedProductDetailId="selectedProductDetailId" />
 </template>
 
 <style scoped></style>
