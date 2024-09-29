@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits, onMounted, reactive } from 'vue';
+import { watch, ref, defineProps, defineEmits, reactive } from 'vue';
 
 const brandImg = ref(null);
 
@@ -51,7 +51,6 @@ function handleImage(e) {
 async function update() {
     let brandName = brand.name;
     let brandImg = brand.image;
-    let id = document.getElementById('updateID').value;
 
     if (brandName.length === 0) {
         errorToast("brand Required !")
@@ -114,7 +113,6 @@ watch(() => props.showUpdateModal, (newVar) => {
                                     <br />
                                     <label class="form-label">Image</label>
                                     <input class="form-control" id="brandImgUpdate" type="file" @change="handleImage">
-                                    <input class="d-none" id="updateID" type="text">
                                 </div>
                             </div>
                         </div>
