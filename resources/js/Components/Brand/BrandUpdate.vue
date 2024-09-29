@@ -1,9 +1,12 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits, onMounted } from 'vue';
+import { watch, ref, defineProps, defineEmits, onMounted, reactive } from 'vue';
 
-const brandName = ref('');
-const brandImg = ref('');
+const brandImg = ref(null);
 
+const brand = reactive({
+    name: '',
+    image: null
+});
 
 const props = defineProps({
     showUpdateModal: {
@@ -34,14 +37,20 @@ async function fillUpUpdateForm() {
     showLoader();
     let res = await axios.get(`/api/admin/brands/${props.selectedBrandId}`);
     res = res.data[0];
-    brandName.value = res['name'];
+    brand.name = res['name'];
     brandImg.value = res['image'];
     hideLoader();
 }
 
+function handleImage(e) {
+    brand.image = e.target.files[0];
+    brandImg.value = URL.createObjectURL(brand.image);
+}
+
+
 async function update() {
-    let brandName = document.getElementById('brandNameUpdate').value;
-    let brandImg = document.getElementById('brandImgUpdate').files[0];
+    let brandName = brand.name;
+    let brandImg = brand.image;
     let id = document.getElementById('updateID').value;
 
     if (brandName.length === 0) {
@@ -99,15 +108,12 @@ watch(() => props.showUpdateModal, (newVar) => {
                             <div class="row">
                                 <div class="col-12 p-1">
                                     <label class="form-label">Brand Name *</label>
-                                    <input class="form-control" id="brandNameUpdate" type="text" :value="brandName">
-
+                                    <input class="form-control" id="brandNameUpdate" type="text" v-model="brand.name">
                                     <br />
                                     <img class="w-15" id="oldImg" :src="brandImg" />
                                     <br />
-
                                     <label class="form-label">Image</label>
-                                    <input class="form-control" id="brandImgUpdate" type="file"
-                                        oninput="oldImg.src=window.URL.createObjectURL(this.files[0])">
+                                    <input class="form-control" id="brandImgUpdate" type="file" @change="handleImage">
                                     <input class="d-none" id="updateID" type="text">
                                 </div>
                             </div>
