@@ -1,5 +1,11 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, reactive } from 'vue';
+
+const category = reactive({
+    name: '',
+    image: null
+});
+const categoryImageUrl = ref(null);
 
 defineProps({
     showCreateModal: {
@@ -21,9 +27,14 @@ async function getListEvent() {
     emit('getList');
 }
 
+function handleImage(e) {
+    category.image = e.target.files[0];
+    categoryImageUrl.value = URL.createObjectURL(category.image);
+}
+
 async function Save() {
-    let categoryName = document.getElementById('categoryName').value;
-    let categoryImg = document.getElementById('categoryImg').files[0];
+    let categoryName = category.name;
+    let categoryImg = category.image;
 
     if (categoryName.length === 0) {
         errorToast("category Required !")
@@ -70,15 +81,15 @@ async function Save() {
                             <div class="row">
                                 <div class="col-12 p-1">
                                     <label class="form-label">Category Name *</label>
-                                    <input class="form-control" id="categoryName" type="text">
+                                    <input class="form-control" id="categoryName" type="text" v-model="category.name">
 
                                     <br />
-                                    <img class="w-15" id="newImg" src="/public/admin/images/default.jpg" />
+                                    <img class="w-15" id="newImg"
+                                        :src="categoryImageUrl ? categoryImageUrl : '/public/admin/images/default.jpg'" />
                                     <br />
 
                                     <label class="form-label">Image</label>
-                                    <input class="form-control" id="categoryImg" type="file"
-                                        oninput="newImg.src=window.URL.createObjectURL(this.files[0])">
+                                    <input class="form-control" id="categoryImg" type="file" @change="handleImage">
 
                                 </div>
                             </div>
