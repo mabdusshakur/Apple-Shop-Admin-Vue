@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits, onMounted, reactive } from 'vue';
+import { watch, ref, defineProps, defineEmits, reactive } from 'vue';
 
 const categoryImg = ref('');
 
@@ -50,7 +50,6 @@ function handleImage(e) {
 async function update() {
     let categoryName = category.name;
     let categoryImg = category.image;
-    let id = document.getElementById('updateID').value;
 
     if (categoryName.length === 0) {
         errorToast("category Required !")
@@ -115,7 +114,6 @@ watch(() => props.showUpdateModal, (newVar) => {
                                     <label class="form-label">Image</label>
                                     <input class="form-control" id="categoryImgUpdate" type="file"
                                         @change="handleImage">
-                                    <input class="d-none" id="updateID" type="text">
                                 </div>
                             </div>
                         </div>
