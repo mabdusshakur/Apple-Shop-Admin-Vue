@@ -1,8 +1,22 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits } from 'vue';
+import { watch, ref, defineProps, defineEmits, reactive } from 'vue';
 
 const categories = ref([]);
 const brands = ref([]);
+const productImageUrl = ref(null);
+
+const product = reactive({
+    title: '',
+    category_id: '',
+    brand_id: '',
+    price: '',
+    stock: '',
+    short_des: '',
+    image: null,
+    remark: '',
+    is_discount: false,
+    discount_price: ''
+});
 
 const props = defineProps({
     showCreateModal: {
@@ -24,15 +38,7 @@ async function getListEvent() {
     emit('getList');
 }
 
-const toggleDiscountPriceTab = () => {
-    let isDiscountCb = document.getElementById('isDiscountCb');
-    let discountPriceTab = document.getElementById('discountPriceTab');
-    if (isDiscountCb.checked) {
-        discountPriceTab.classList.remove('d-none');;
-    } else {
-        discountPriceTab.classList.add('d-none');
-    }
-}
+
 async function fillUpCategoryDropDown() {
     let res = await axios.get("/api/admin/categories")
     categories.value = res.data[0];
@@ -43,17 +49,22 @@ async function fillUpBrandDropDown() {
     brands.value = res.data[0];
 }
 
+function handleImage(e) {
+    product.image = e.target.files[0];
+    productImageUrl.value = URL.createObjectURL(product.image);
+}
+
 async function Save() {
-    let category_id = document.getElementById('productCategory').value;
-    let brand_id = document.getElementById('productBrand').value;
-    let remark = document.getElementById('productRemark').value;
-    let title = document.getElementById('productTitle').value;
-    let is_discount = document.getElementById('isDiscountCb');
-    let discount_price = document.getElementById('productDiscountPrice').value;
-    let price = document.getElementById('productPrice').value;
-    let stock = document.getElementById('productStock').value;
-    let short_des = document.getElementById('productShortDescription').value;
-    let image = document.getElementById('productImg').files[0];
+    let category_id = product.category_id;
+    let brand_id = product.brand_id;
+    let remark = product.remark;
+    let title = product.title;
+    let is_discount = product.is_discount
+    let discount_price = product.discount_price;
+    let price = product.price;
+    let stock = product.stock;
+    let short_des = product.short_des
+    let image = product.image;
 
     if (category_id.length === 0) {
         errorToast("Product Category Required !");
@@ -67,7 +78,7 @@ async function Save() {
         errorToast("Product Price Required !");
     } else if (short_des.length === 0) {
         errorToast("Product Short Description Required !");
-    } else if (is_discount.checked && discount_price.length === 0) {
+    } else if (is_discount && discount_price.length === 0) {
         errorToast("Discount Price Required !");
     } else if (!image) {
         errorToast("Product Image Required !");
@@ -82,10 +93,10 @@ async function Save() {
         formData.append('brand_id', brand_id);
         formData.append('remark', remark);
         formData.append('short_des', short_des);
-        formData.append('is_discount', is_discount.checked ? 1 : 0);
+        formData.append('is_discount', is_discount ? 1 : 0);
         formData.append('in_stock', 1);
         formData.append('star', 0);
-        if (is_discount.checked) {
+        if (is_discount) {
             formData.append('discount_price', discount_price);
         }
 
@@ -135,21 +146,24 @@ watch(() => props.showCreateModal, (newVar) => {
                                 <div class="col-12 p-1">
 
                                     <label class="form-label">Category</label>
-                                    <select class="form-control form-select" id="productCategory">
+                                    <select class="form-control form-select" id="productCategory"
+                                        v-model="product.category_id">
                                         <option v-for="(item, index) in categories" :key="index" :value="item.id">
                                             {{ item.name }}
                                         </option>
                                     </select>
 
                                     <label class="form-label">Brand</label>
-                                    <select class="form-control form-select" id="productBrand">
+                                    <select class="form-control form-select" id="productBrand"
+                                        v-model="product.brand_id">
                                         <option v-for="(item, index) in brands" :key="index" :value="item.id">
                                             {{ item.name }}
                                         </option>
                                     </select>
 
                                     <label class="form-label">Remark</label>
-                                    <select class="form-control form-select" id="productRemark">
+                                    <select class="form-control form-select" id="productRemark"
+                                        v-model="product.remark">
                                         <option value="">Select Remark</option>
                                         <option value="popular">Popular</option>
                                         <option value="new">New</option>
@@ -160,37 +174,37 @@ watch(() => props.showCreateModal, (newVar) => {
                                     </select>
 
                                     <label class="form-label mt-2">Title</label>
-                                    <input class="form-control" id="productTitle" type="text">
+                                    <input class="form-control" id="productTitle" type="text" v-model="product.title">
 
                                     <label class="form-label mt-2">Price</label>
-                                    <input class="form-control" id="productPrice" type="text">
+                                    <input class="form-control" id="productPrice" type="text" v-model="product.price">
 
                                     <br />
                                     <label class="form-label">is Discount ?</label>
                                     <input id="isDiscountCb" type="checkbox" style="background-color: rgb(0, 110, 255);"
-                                        v-on:click="toggleDiscountPriceTab">
+                                        v-on:click="toggleDiscountPriceTab" v-model="product.is_discount">
                                     <br />
 
-                                    <div class="d-none" id="discountPriceTab">
+                                    <div :class="product.is_discount ? '' : 'd-none'" id="discountPriceTab">
                                         <label class="form-label mt-2">Discount Price</label>
-                                        <input class="form-control" id="productDiscountPrice" type="text">
+                                        <input class="form-control" id="productDiscountPrice" type="text"
+                                            v-model="product.discount_price">
                                     </div>
 
                                     <label class="form-label mt-2">Stock</label>
-                                    <input class="form-control" id="productStock" type="text">
+                                    <input class="form-control" id="productStock" type="text" v-model="product.stock">
 
                                     <label class="form-label mt-2">Short Description</label>
-                                    <textarea class="form-control" id="productShortDescription" name=""
-                                        rows="3"></textarea>
+                                    <textarea class="form-control" id="productShortDescription" name="" rows="3"
+                                        v-model="product.short_des"></textarea>
 
                                     <br />
-                                    <img class="w-15" id="newImg" src="/public/admin/images/default.jpg" />
+                                    <img class="w-15" id="newImg"
+                                        :src="product.image ? productImageUrl : '/admin/images/default.jpg'" />
                                     <br />
 
                                     <label class="form-label">Image</label>
-                                    <input class="form-control" id="productImg" type="file"
-                                        oninput="newImg.src=window.URL.createObjectURL(this.files[0])">
-
+                                    <input class="form-control" id="productImg" type="file" @change="handleImage">
                                 </div>
                             </div>
                         </div>
