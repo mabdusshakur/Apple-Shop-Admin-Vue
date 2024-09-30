@@ -78,8 +78,6 @@ watch(() => props.showDeleteModal, (newVar) => {
                 <div class="modal-body text-center">
                     <h3 class="text-warning mt-3">Delete !</h3>
                     <p class="mb-3">Once delete, you can't get it back.</p>
-                    <input class="d-none" id="deleteProductId" />
-                    <input class="d-none" id="deleteDetailId" />
                 </div>
                 <div class="modal-footer justify-content-end">
                     <div>
