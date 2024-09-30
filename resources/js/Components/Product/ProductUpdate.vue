@@ -1,11 +1,10 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits, reactive, onMounted } from 'vue';
+import { watch, ref, defineProps, defineEmits, reactive } from 'vue';
 
 const categories = ref([]);
 const brands = ref([]);
 const product_detail_id = ref(null);
 const productImageUrl = ref(null);
-const old_product = ref(null);
 
 const product_detail_img1 = ref(null);
 const product_detail_img2 = ref(null);
@@ -118,16 +117,6 @@ async function getListEvent() {
     emit('getList');
 }
 
-// const toggleDiscountPriceTab = () => {
-//     let isDiscountCb = document.getElementById('isDiscountCbUpdate');
-//     let discountPriceTab = document.getElementById('discountPriceTabUpdate');
-//     if (isDiscountCb.checked) {
-//         discountPriceTab.classList.remove('d-none');;
-//     } else {
-//         discountPriceTab.classList.add('d-none');
-//     }
-// }
-
 async function fillUpCategoryDropDown() {
     let res = await axios.get("/api/admin/categories")
     categories.value = res.data[0];
@@ -155,17 +144,6 @@ async function fillUpUpdateModal() {
     productImageUrl.value = res['image'];
     product.is_discount = res['is_discount'] == 1 ? true : false;
     product.discount_price = product.is_discount ? res['discount_price'] : '';
-
-
-    // if (res['is_discount']) {
-    //     document.getElementById('isDiscountCbUpdate').checked = true;
-    //     document.getElementById('discountPriceTabUpdate').classList.remove('d-none');
-    //     document.getElementById('productDiscountPriceUpdate').value = res['discount_price'];
-    // } else {
-    //     document.getElementById('isDiscountCbUpdate').checked = false;
-    //     document.getElementById('discountPriceTabUpdate').classList.add('d-none');
-    //     document.getElementById('productDiscountPriceUpdate').value = '';
-    // }
 
     if (!isNaN(detail)) {
         product.product_detail.size = res['product_detail']['size'];
@@ -432,9 +410,6 @@ watch(() => props.showUpdateModal, (newVar) => {
                                                 :src="product_detail_img4 ? product_detail_img4 : '/admin/images/default.jpg'" />
                                         </div>
                                     </div>
-
-                                    <input class="d-none" id="updateID" type="text">
-                                    <input class="d-none" id="detailID" type="text">
                                 </div>
                             </div>
                         </div>
