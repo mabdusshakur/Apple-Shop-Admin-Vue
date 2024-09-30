@@ -1,9 +1,12 @@
 <script setup>
-import { watch, ref, defineProps, defineEmits, onMounted } from 'vue';
+import { watch, ref, defineProps, defineEmits, onMounted, reactive } from 'vue';
 
-const categoryName = ref('');
 const categoryImg = ref('');
 
+const category = reactive({
+    name: '',
+    image: null
+});
 
 const props = defineProps({
     showUpdateModal: {
@@ -34,14 +37,19 @@ async function fillUpUpdateForm() {
     showLoader();
     let res = await axios.get(`/api/admin/categories/${props.selectedCategoryId}`);
     res = res.data[0];
-    categoryName.value = res['name'];
+    category.name = res['name'];
     categoryImg.value = res['image'];
     hideLoader();
 }
 
+function handleImage(e) {
+    category.image = e.target.files[0];
+    categoryImg.value = URL.createObjectURL(category.image);
+}
+
 async function update() {
-    let categoryName = document.getElementById('categoryNameUpdate').value;
-    let categoryImg = document.getElementById('categoryImgUpdate').files[0];
+    let categoryName = category.name;
+    let categoryImg = category.image;
     let id = document.getElementById('updateID').value;
 
     if (categoryName.length === 0) {
@@ -100,13 +108,13 @@ watch(() => props.showUpdateModal, (newVar) => {
                                 <div class="col-12 p-1">
                                     <label class="form-label">Category Name *</label>
                                     <input class="form-control" id="categoryNameUpdate" type="text"
-                                        :value="categoryName">
+                                        v-model="category.name">
                                     <br />
-                                    <img class="w-15" id="oldImg" :src="categoryImg" />
+                                    <img class="w-15" id="oldImg" :src="categoryImg ?? categoryImg" />
                                     <br />
                                     <label class="form-label">Image</label>
                                     <input class="form-control" id="categoryImgUpdate" type="file"
-                                        oninput="oldImg.src=window.URL.createObjectURL(this.files[0])">
+                                        @change="handleImage">
                                     <input class="d-none" id="updateID" type="text">
                                 </div>
                             </div>
