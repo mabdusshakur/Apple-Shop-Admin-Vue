@@ -1,17 +1,19 @@
 <script setup>
+import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
+const email = ref(null);
+
 async function Login() {
-    let email = document.getElementById('email').value;
-    if (email.length === 0) {
+    if (email.value.length === 0) {
         alert("Email Required!");
     } else {
         let res = await axios.post("/api/auth/login", {
-            email: email
+            email: email.value
         });
 
         if (res.data.success === true) {
-            sessionStorage.setItem('email', email);
+            sessionStorage.setItem('email', email.value);
             router.visit('/verify-otp');
         } else {
             alert("Something Went Wrong");
@@ -27,8 +29,8 @@ async function Login() {
             <div class="bg-white p-5 shadow-sm rounded">
                 <h3>Login</h3>
                 <div class="form-group mb-3">
-                    <input class="form-control" id="email" name="email" type="text" required=""
-                        placeholder="Your Email">
+                    <input class="form-control" id="email" name="email" type="text" required="" placeholder="Your Email"
+                        v-model="email">
                 </div>
                 <div class="form-group mb-3">
                     <button class="btn btn-outline-dark btn-block" name="login" type="submit"

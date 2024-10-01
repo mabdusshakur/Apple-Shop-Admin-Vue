@@ -1,16 +1,17 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
+import { ref } from 'vue'
+
+const otp_code = ref(null);
+const email = sessionStorage.getItem('email');
 
 async function verify() {
-    let code = document.getElementById('code').value;
-    let email = sessionStorage.getItem('email');
-
-    if (code.length === 0) {
+    if (otp_code.value.length === 0) {
         alert("Code Required!");
     } else {
         axios.post("/api/auth/verify-otp", {
             email: email,
-            otp: code
+            otp: otp_code.value
         }).then(res => {
             if (res.data.success === true) {
                 sessionStorage.setItem('is_auth', true);
@@ -31,8 +32,8 @@ async function verify() {
             <div class="bg-white p-5 shadow-sm rounded">
                 <h3>Verification</h3>
                 <div class="form-group mb-3">
-                    <input class="form-control" id="code" name="email" type="text" required=""
-                        placeholder="Verification Code">
+                    <input class="form-control" id="otp_code" name="otp_code" type="text" required=""
+                        placeholder="Verification Code" v-model="otp_code">
                 </div>
                 <div class="form-group mb-3">
                     <button class="btn btn-outline-dark btn-block" name="login" type="submit"
