@@ -1,12 +1,6 @@
 <script setup>
-import { onMounted } from 'vue';
 import SideNav from '../Components/SideNav.vue';
 import TopNav from '../Components/TopNav.vue';
-
-
-onMounted(() => {
-
-});
 </script>
 
 <template>
